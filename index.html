@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatality Client - Premium Minecraft клиент</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #0f0f0f;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        
+        .logo span {
+            color: #dc2626;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #cccccc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .login-button, .register-button {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #333;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-button:hover, .register-button:hover {
+            background: #1a1a1a;
+            border-color: #dc2626;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #dc2626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .logout-button {
+            background: transparent;
+            color: #cccccc;
+            border: 1px solid #333;
+            padding: 6px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-button:hover {
+            color: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .download-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .download-button:hover {
+            background: #059669;
+        }
+        
+        /* Auth Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #cccccc;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #dc2626;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: none;
+            border: none;
+            color: #cccccc;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .auth-tab.active {
+            color: #dc2626;
+            border-bottom-color: #dc2626;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cccccc;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #ffffff;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #dc2626;
+        }
+        
+        .submit-button {
+            width: 100%;
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .submit-button:hover {
+            background: #b91c1c;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        .form-footer a {
+            color: #dc2626;
+            text-decoration: none;
+        }
+
+        /* Profile Modal */
+        .profile-modal .modal-content {
+            max-width: 500px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #dc2626;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar:hover::after {
+            content: '📷';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .avatar-upload {
+            display: none;
+        }
+
+        .profile-info {
+            margin-bottom: 30px;
+        }
+
+        .subscription-status {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .subscription-active {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .subscription-inactive {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .subscription-type {
+            color: #dc2626;
+            margin-top: 10px;
+        }
+
+        .subscription-expiry {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+            background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #cccccc;
+        }
+        
+        .hero-divider {
+            width: 100px;
+            height: 2px;
+            background: #333;
+            margin: 30px auto;
+        }
+        
+        .cta-button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cta-button:hover {
+            background: #b91c1c;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: #0f0f0f;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid #333;
+        }
+        
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .feature-card p {
+            color: #cccccc;
+            margin-bottom: 20px;
+        }
+        
+        .feature-divider {
+            width: 100%;
+            height: 1px;
+            background: #333;
+            margin: 20px 0;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 0;
+            background: #1a1a1a;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .pricing-card {
+            background: #0f0f0f;
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #dc2626;
+        }
+        
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .pricing-card h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+
+        .price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #dc2626;
+            margin: 20px 0;
+        }
+        
+        .pricing-card p {
+            color: #cccccc;
+            margin-bottom: 25px;
+        }
+        
+        .purchase-button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        .purchase-button:hover {
+            background: #b91c1c;
+        }
+
+        .purchase-button.disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .pricing-divider {
+            width: 100%;
+            height: 1px;
+            background: #333;
+            margin: 20px 0;
+        }
+        
+        /* Why Us Section */
+        .why-us {
+            padding: 100px 0;
+            background: #0f0f0f;
+        }
+        
+        .why-us-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .why-us-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+        
+        .why-us-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .why-us-card p {
+            color: #cccccc;
+        }
+        
+        /* Footer */
+        footer {
+            background: #0a0a0a;
+            padding: 60px 0 30px;
+            border-top: 1px solid #333;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            border: 1px solid #dc2626;
+            border-radius: 8px;
+            padding: 20px;
+            color: white;
+            z-index: 1001;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification h4 {
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+
+        .notification p {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Вход</button>
+                <button class="auth-tab" data-tab="register">Регистрация</button>
+            </div>
+            
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="submit-button">Войти</button>
+                <div class="form-footer">
+                    <a href="#" class="forgot-password">Забыли пароль?</a>
+                </div>
+            </form>
+            
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Имя пользователя</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Подтвердите пароль</label>
+                    <input type="password" id="registerConfirmPassword" required>
+                </div>
+                <button type="submit" class="submit-button">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal profile-modal" id="profileModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeProfileModal">&times;</button>
+            
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    <input type="file" id="avatarUpload" class="avatar-upload" accept="image/*">
+                </div>
+                <h2 id="profileUsername">Пользователь</h2>
+            </div>
+            
+            <div class="profile-info">
+                <div class="form-group">
+                    <label for="profileNickname">Minecraft никнейм</label>
+                    <input type="text" id="profileNickname" placeholder="Введите ваш никнейм">
+                </div>
+                <button class="submit-button" id="saveProfile">Сохранить профиль</button>
+            </div>
+            
+            <div class="subscription-status">
+                <h3>Статус подписки</h3>
+                <div id="subscriptionInfo">
+                    <p class="subscription-inactive">❌ Подписка не активна</p>
+                    <p>У вас нет активной подписки на Fatality Client</p>
+                </div>
+                <div id="downloadSection" style="display: none; margin-top: 20px;">
+                    <button class="download-button" id="downloadClient">
+                        📥 Скачать Fatality Client
+                    </button>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                        Доступно только для пользователей с активной подпиской
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <h4 id="notificationTitle">Внимание</h4>
+        <p id="notificationMessage">Данный клиент еще в разработке</p>
+    </div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Fatality<span>Client</span></div>
+                <div class="nav-links">
+                    <a href="#features">Функции</a>
+                    <a href="#pricing">Цены</a>
+                    <a href="#why-us">О нас</a>
+                </div>
+                <div class="auth-buttons" id="authButtons">
+                    <button class="login-button" id="openLogin">Войти</button>
+                    <button class="register-button" id="openRegister">Регистрация</button>
+                </div>
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <div class="user-avatar" id="userAvatar" title="Профиль">U</div>
+                    <span id="userName">Пользователь</span>
+                    <button class="download-button" id="headerDownload" style="display: none;">Скачать</button>
+                    <button class="logout-button" id="logoutButton">Выйти</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>FATALITY CLIENT</h1>
+            <p>Наслаждайтесь каждой минутой игрового процесса с нашим товаром, созданным для вашего комфорта и удовольствия. Он оптимизирован, чтобы сделать Minecraft еще увлекательнее и удобнее, позволяя вам полностью погрузиться в игру без лишних забот.</p>
+            <div class="hero-divider"></div>
+            <button class="cta-button" id="main-buy-button">Купить →</button>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Тарифные планы</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>ВЕТА</h3>
+                    <h4>Навсегда</h4>
+                    <div class="price">540 ₽</div>
+                    <p>Проверенные возможности прошлого и эксклюзивные новинки навсегда.</p>
+                    <div class="pricing-divider"></div>
+                    <button class="purchase-button disabled" data-plan="beta" data-price="540">Скоро будет доступно</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Fatality</h3>
+                    <h4>Навсегда</h4>
+                    <div class="price">899 ₽</div>
+                    <p>Вы получаете клиент абсолютно навсегда, так же все последующие обновления.</p>
+                    <div class="pricing-divider"></div>
+                    <button class="purchase-button disabled" data-plan="fatality" data-price="899">Скоро будет доступно</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Fatality</h3>
+                    <h4>30 дней</h4>
+                    <div class="price">200 ₽</div>
+                    <p>Вы получаете клиент всего на 30 дней, обновления на этот период.</p>
+                    <div class="pricing-divider"></div>
+                    <button class="purchase-button disabled" data-plan="monthly" data-price="200">Скоро будет доступно</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-us" id="why-us">
+        <div class="container">
+            <h2 class="section-title">Почему стоит выбрать нас?</h2>
+            <div class="why-us-content">
+                <div class="why-us-card">
+                    <h3>Красивый внешний вид</h3>
+                    <p>В нашем клиенте присутствует большое количество визуальных функций, которые сделают вашу игру более красочной. А так же вы можете настроить оформление клиента под себя, сделав его по настоящему красивым.</p>
+                </div>
+                <div class="why-us-card">
+                    <h3>Настраиваемость</h3>
+                    <p>В нашем клиенте вы можете настроить практически любую функцию под себя, а так же использовать конфигурации других пользователей. Благодаря этому вы сможете использовать наш клиент на максимуме его возможностей.</p>
+                </div>
+                <div class="why-us-card">
+                    <h3>Оптимизация</h3>
+                    <p>Мы постоянно улучшаем оптимизацию нашего клиента и самой игры. Благодаря этому вы сможете запустить наш клиент даже на слабых компьютерах.</p>
+                </div>
+                <div class="why-us-card">
+                    <h3>Частые обновления</h3>
+                    <p>Мы регулярно обновляем функционал в нашем клиенте, добавляя новые функции, а так же совершенствуя уже существующие благодаря этому наш клиент имеет всегда актуальный и современный функционал.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>FatalityClient</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">О нас</a></li>
+                        <li><a href="#features">Функции</a></li>
+                        <li><a href="#pricing">Цены</a></li>
+                        <li><a href="#download">Скачать</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Поддержка</h4>
+                    <ul class="footer-links">
+                        <li><a href="#help">Помощь</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#status">Статус</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Сообщество</h4>
+                    <ul class="footer-links">
+                        <li><a href="#discord">Discord</a></li>
+                        <li><a href="#telegram">Telegram</a></li>
+                        <li><a href="#vk">VK</a></li>
+                        <li><a href="#youtube">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 FatalityClient. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // User management
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // DOM Elements
+        const authModal = document.getElementById('authModal');
+        const profileModal = document.getElementById('profileModal');
+        const closeModal = document.getElementById('closeModal');
+        const closeProfileModal = document.getElementById('closeProfileModal');
+        const openLogin = document.getElementById('openLogin');
+        const openRegister = document.getElementById('openRegister');
+        const authButtons = document.getElementById('authButtons');
+        const userMenu = document.getElementById('userMenu');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutButton = document.getElementById('logoutButton');
+        const headerDownload = document.getElementById('headerDownload');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const notification = document.getElementById('notification');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileUsername = document.getElementById('profileUsername');
+        const profileNickname = document.getElementById('profileNickname');
+        const saveProfileButton = document.getElementById('saveProfile');
+        const avatarUpload = document.getElementById('avatarUpload');
+        const subscriptionInfo = document.getElementById('subscriptionInfo');
+        const downloadSection = document.getElementById('downloadSection');
+        const downloadClient = document.getElementById('downloadClient');
+
+        // Initialize user state
+        function initUserState() {
+            if (currentUser) {
+                showUserMenu();
+                updateProfileDisplay();
+                updateDownloadButton();
+            } else {
+                showAuthButtons();
+            }
+        }
+
+        function showUserMenu() {
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'flex';
+            userName.textContent = currentUser.username;
+            updateAvatarDisplay(userAvatar, currentUser.avatar);
+        }
+
+        function showAuthButtons() {
+            authButtons.style.display = 'flex';
+            userMenu.style.display = 'none';
+        }
+
+        function updateProfileDisplay() {
+            if (currentUser) {
+                profileUsername.textContent = currentUser.username;
+                profileNickname.value = currentUser.nickname || '';
+                updateAvatarDisplay(profileAvatar, currentUser.avatar);
+                updateSubscriptionDisplay();
+            }
+        }
+
+        function updateAvatarDisplay(element, avatarUrl) {
+            if (avatarUrl) {
+                element.style.backgroundImage = `url(${avatarUrl})`;
+                element.textContent = '';
+            } else {
+                element.style.backgroundImage = 'none';
+                element.textContent = currentUser.username.charAt(0).toUpperCase();
+            }
+        }
+
+        function updateSubscriptionDisplay() {
+            if (currentUser.subscription) {
+                const sub = currentUser.subscription;
+                const expiryDate = new Date(sub.expiryDate);
+                const now = new Date();
+                const isActive = expiryDate > now;
+                
+                if (isActive) {
+                    subscriptionInfo.innerHTML = `
+                        <p class="subscription-active">✅ Подписка активна</p>
+                        <p class="subscription-type">Тип: ${sub.type}</p>
+                        <p class="subscription-expiry">Истекает: ${expiryDate.toLocaleDateString('ru-RU')}</p>
+                    `;
+                    downloadSection.style.display = 'block';
+                } else {
+                    subscriptionInfo.innerHTML = `
+                        <p class="subscription-inactive">❌ Подписка истекла</p>
+                        <p class="subscription-type">Тип: ${sub.type}</p>
+                        <p class="subscription-expiry">Истекла: ${expiryDate.toLocaleDateString('ru-RU')}</p>
+                    `;
+                    downloadSection.style.display = 'none';
+                }
+            } else {
+                subscriptionInfo.innerHTML = `
+                    <p class="subscription-inactive">❌ Подписка не активна</p>
+                    <p>У вас нет активной подписки на Fatality Client</p>
+                `;
+                downloadSection.style.display = 'none';
+            }
+        }
+
+        function updateDownloadButton() {
+            if (currentUser.subscription) {
+                const sub = currentUser.subscription;
+                const expiryDate = new Date(sub.expiryDate);
+                const now = new Date();
+                const isActive = expiryDate > now;
+                
+                if (isActive) {
+                    headerDownload.style.display = 'block';
+                } else {
+                    headerDownload.style.display = 'none';
+                }
+            } else {
+                headerDownload.style.display = 'none';
+            }
+        }
+
+        // Modal functionality
+        function openModal(tab = 'login') {
+            authModal.style.display = 'block';
+            switchTab(tab);
+        }
+
+        function openProfileModal() {
+            profileModal.style.display = 'block';
+            updateProfileDisplay();
+        }
+
+        function closeModalFunc() {
+            authModal.style.display = 'none';
+            profileModal.style.display = 'none';
+            loginForm.reset();
+            registerForm.reset();
+        }
+
+        function switchTab(tabName) {
+            authTabs.forEach(tab => {
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            authForms.forEach(form => {
+                if (form.id === `${tabName}Form`) {
+                    form.classList.add('active');
+                } else {
+                    form.classList.remove('active');
+                }
+            });
+        }
+
+        // Notification functionality
+        function showNotification(title, message, isSuccess = false) {
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            notification.style.borderColor = isSuccess ? '#10b981' : '#dc2626';
+            notificationTitle.style.color = isSuccess ? '#10b981' : '#dc2626';
+            
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Avatar upload functionality
+        profileAvatar.addEventListener('click', function() {
+            avatarUpload.click();
+        });
+
+        avatarUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUser.avatar = e.target.result;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateAvatarDisplay(profileAvatar, currentUser.avatar);
+                    updateAvatarDisplay(userAvatar, currentUser.avatar);
+                    showNotification('Успешно!', 'Аватар обновлен', true);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Profile save functionality
+        saveProfileButton.addEventListener('click', function() {
+            currentUser.nickname = profileNickname.value;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update users array
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            
+            showNotification('Успешно!', 'Профиль сохранен', true);
+        });
+
+        // Download functionality
+        downloadClient.addEventListener('click', function() {
+            showNotification('Скачивание', 'Клиент скоро будет доступен для скачивания');
+        });
+
+        headerDownload.addEventListener('click', function() {
+            showNotification('Скачивание', 'Клиент скоро будет доступен для скачивания');
+        });
+
+        // Form handlers
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showNotification('Успешно!', 'Вы успешно вошли в систему', true);
+                closeModalFunc();
+                showUserMenu();
+                updateProfileDisplay();
+                updateDownloadButton();
+            } else {
+                showNotification('Ошибка', 'Неверный email или пароль');
+            }
+        });
+
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showNotification('Ошибка', 'Пароли не совпадают');
+                return;
+            }
+            
+            if (users.find(u => u.email === email)) {
+                showNotification('Ошибка', 'Пользователь с таким email уже существует');
+                return;
+            }
+            
+            if (users.find(u => u.username === username)) {
+                showNotification('Ошибка', 'Пользователь с таким именем уже существует');
+                return;
+            }
+            
+            const newUser = {
+                username,
+                email,
+                password,
+                nickname: '',
+                avatar: '',
+                subscription: null
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            showNotification('Успешно!', 'Аккаунт успешно создан', true);
+            switchTab('login');
+            registerForm.reset();
+        });
+
+        // Purchase functionality (disabled for now)
+        function purchaseSubscription(planType) {
+            showNotification('Внимание', 'Покупка подписок временно недоступна. Скоро будет!');
+        }
+
+        // Logout functionality
+        logoutButton.addEventListener('click', function() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showAuthButtons();
+            showNotification('Информация', 'Вы вышли из системы');
+        });
+
+        // Event listeners
+        openLogin.addEventListener('click', () => openModal('login'));
+        openRegister.addEventListener('click', () => openModal('register'));
+        closeModal.addEventListener('click', closeModalFunc);
+        closeProfileModal.addEventListener('click', closeModalFunc);
+        userAvatar.addEventListener('click', openProfileModal);
+        
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+        });
+
+        // Purchase buttons (disabled)
+        document.querySelectorAll('.purchase-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const plan = this.dataset.plan;
+                showNotification('Внимание', 'Покупка подписок временно недоступна. Скоро будет!');
+            });
+        });
+
+        document.getElementById('main-buy-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!currentUser) {
+                showNotification('Внимание', 'Для покупки необходимо войти в систему');
+                openModal('login');
+            } else {
+                showNotification('Внимание', 'Покупка подписок временно недоступна. Скоро будет!');
+            }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === authModal || e.target === profileModal) {
+                closeModalFunc();
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(15, 15, 15, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = '#0f0f0f';
+                header.style.backdropFilter = 'none';
+            }
+        });
+
+        // Initialize
+        initUserState();
+    </script>
+</body>
+  </html>
