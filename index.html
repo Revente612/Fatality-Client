@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatality Client - Premium Minecraft клиент</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #0f0f0f;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        
+        .logo span {
+            color: #dc2626;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #cccccc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .login-button {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #333;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-button:hover {
+            background: #1a1a1a;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+            background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #cccccc;
+        }
+        
+        .hero-divider {
+            width: 100px;
+            height: 2px;
+            background: #333;
+            margin: 30px auto;
+        }
+        
+        .cta-button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cta-button:hover {
+            background: #b91c1c;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: #0f0f0f;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid #333;
+        }
+        
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .feature-card p {
+            color: #cccccc;
+            margin-bottom: 20px;
+        }
+        
+        .feature-divider {
+            width: 100%;
+            height: 1px;
+            background: #333;
+            margin: 20px 0;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 0;
+            background: #1a1a1a;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .pricing-card {
+            background: #0f0f0f;
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #dc2626;
+        }
+        
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .pricing-card h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+        
+        .pricing-card p {
+            color: #cccccc;
+            margin-bottom: 25px;
+        }
+        
+        .purchase-button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        .purchase-button:hover {
+            background: #b91c1c;
+        }
+        
+        .pricing-divider {
+            width: 100%;
+            height: 1px;
+            background: #333;
+            margin: 20px 0;
+        }
+        
+        /* Why Us Section */
+        .why-us {
+            padding: 100px 0;
+            background: #0f0f0f;
+        }
+        
+        .why-us-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .why-us-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+        
+        .why-us-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .why-us-card p {
+            color: #cccccc;
+        }
+        
+        /* Footer */
+        footer {
+            background: #0a0a0a;
+            padding: 60px 0 30px;
+            border-top: 1px solid #333;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+            color: #666666;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Fatality<span>Client</span></div>
+                <div class="nav-links">
+                    <a href="#features">Функции</a>
+                    <a href="#pricing">Цены</a>
+                    <a href="#why-us">О нас</a>
+                    <a href="#docs">Документы</a>
+                </div>
+                <div class="auth-buttons">
+                    <button class="login-button">Войти</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>FATALITY CLIENT</h1>
+            <p>Наслаждайтесь каждой минутой игрового процесса с нашим товаром, созданным для вашего комфорта и удовольствия. Он оптимизирован, чтобы сделать Minecraft еще увлекательнее и удобнее, позволяя вам полностью погрузиться в игру без лишних забот.</p>
+            <div class="hero-divider"></div>
+            <button class="cta-button">Купить →</button>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Самые популярные товары</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>ВЕТА</h3>
+                    <h4>Навсегда</h4>
+                    <p>Проверенные возможности прошлого и эксклюзивные новинки навсегда.</p>
+                    <div class="pricing-divider"></div>
+                    <button class="purchase-button">Приобрести</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Fatality</h3>
+                    <h4>Навсегда</h4>
+                    <p>Вы получаете клиент абсолютно навсегда, так же все последующие обновления.</p>
+                    <div class="pricing-divider"></div>
+                    <button class="purchase-button">Приобрести</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Fatality месяц</h3>
+                    <p>Вы получаете клиент всего на 30 дней, обновления на этот период.</p>
+                    <div class="pricing-divider"></div>
+                    <button class="purchase-button">Приобрести</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-us" id="why-us">
+        <div class="container">
+            <h2 class="section-title">Почему стоит выбрать нас?</h2>
+            <div class="why-us-content">
+                <div class="why-us-card">
+                    <h3>Красивый внешний вид</h3>
+                    <p>В нашем клиенте присутствует большое количество визуальных функций, которые сделают вашу игру более красочной. А так же вы можете настроить оформление клиента под себя, сделав его по настоящему красивым.</p>
+                </div>
+                <div class="why-us-card">
+                    <h3>Настраиваемость</h3>
+                    <p>В нашем клиенте вы можете настроить практически любую функцию под себя, а так же использовать конфигурации других пользователей. Благодаря этому вы сможете использовать наш клиент на максимуме его возможностей.</p>
+                </div>
+                <div class="why-us-card">
+                    <h3>Оптимизация</h3>
+                    <p>Мы постоянно улучшаем оптимизацию нашего клиента и самой игры. Благодаря этому вы сможете запустить наш клиент даже на слабых компьютерах.</p>
+                </div>
+                <div class="why-us-card">
+                    <h3>Частые обновления</h3>
+                    <p>Мы регулярно обновляем функционал в нашем клиенте, добавляя новые функции, а так же совершенствуя уже существующие благодаря этому наш клиент имеет всегда актуальный и современный функционал.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>FatalityClient</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">О нас</a></li>
+                        <li><a href="#features">Функции</a></li>
+                        <li><a href="#pricing">Цены</a></li>
+                        <li><a href="#download">Скачать</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Поддержка</h4>
+                    <ul class="footer-links">
+                        <li><a href="#help">Помощь</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#status">Статус</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Правовая информация</h4>
+                    <ul class="footer-links">
+                        <li><a href="#privacy">Политика конфиденциальности</a></li>
+                        <li><a href="#terms">Условия использования</a></li>
+                        <li><a href="#cookies">Cookie</a></li>
+                        <li><a href="#eula">EULA</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Сообщество</h4>
+                    <ul class="footer-links">
+                        <li><a href="#discord">Discord</a></li>
+                        <li><a href="#telegram">Telegram</a></li>
+                        <li><a href="#vk">VK</a></li>
+                        <li><a href="#youtube">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 FatalityClient. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(15, 15, 15, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = '#0f0f0f';
+                header.style.backdropFilter = 'none';
+            }
+        });
+        
+        // Purchase buttons functionality
+        document.querySelectorAll('.purchase-button, .cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('Функция покупки будет реализована в ближайшее время!');
+            });
+        });
+        
+        // Login button functionality
+        document.querySelector('.login-button').addEventListener('click', function() {
+            alert('Форма входа будет доступна в ближайшее время!');
+        });
+    </script>
+</body>
+      </html>
